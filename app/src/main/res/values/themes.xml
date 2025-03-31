@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Noteproject25_1" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/my_light_primary</item>
+        <item name="colorPrimaryDark">@color/my_light_primary_dark</item>
+        <item name="colorAccent">@color/my_light_accent</item>
+    </style>
+
+    <style name="Theme.Noteproject25_1" parent="Base.Theme.Noteproject25_1" />
+</resources>
