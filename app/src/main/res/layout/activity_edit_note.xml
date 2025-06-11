@@ -48,6 +48,17 @@
             android:contentDescription="노트 이미지"
             />
 
+        <ImageButton
+            android:id="@+id/removeCurrentImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="?android:attr/textColorPrimaryInverse"
+            android:background="@drawable/oval_background_with_opacity"
+            android:padding="8dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="8dp"
+            android:contentDescription="이미지 삭제" />
 
     </FrameLayout>
 

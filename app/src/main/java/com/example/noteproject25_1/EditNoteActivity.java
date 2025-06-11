@@ -35,7 +35,11 @@ public class EditNoteActivity extends AppCompatActivity {
     EditText titleEditText, contentEditText;
     ImageView noteImageView;
     FrameLayout imageDisplayContainer; // 이미지를 보여주는 FrameLayout
-    ImageButton saveButton, addImageButton;
+
+
+
+    ImageButton saveButton, addImageButton, removeCurrentImageButton;
+
 
     private String currentNoteId; // 현재 편집 중인 노트의 ID (새 노트면 null)
     private Uri currentImageUri;  // 현재 선택된 이미지의 URI
@@ -51,6 +55,8 @@ public class EditNoteActivity extends AppCompatActivity {
         imageDisplayContainer = findViewById(R.id.imageDisplayContainer);
         saveButton = findViewById(R.id.saveButton);
         addImageButton = findViewById(R.id.addImageButton);
+        removeCurrentImageButton = findViewById(R.id.removeCurrentImageButton);
+
 
         // Intent로부터 노트 데이터 로드 (기존 노트 수정 시)
         loadNoteData();
@@ -58,6 +64,8 @@ public class EditNoteActivity extends AppCompatActivity {
         // 버튼 클릭 리스너 설정
         addImageButton.setOnClickListener(v -> openGallery());
         saveButton.setOnClickListener(v -> saveNote());
+        removeCurrentImageButton.setOnClickListener(v -> removeImage()); // 삭제 버튼 리스너
+
 
         // 초기 이미지 컨테이너 가시성 업데이트
         updateImageContainerVisibility();
@@ -167,5 +175,13 @@ public class EditNoteActivity extends AppCompatActivity {
         setResult(RESULT_OK, resultIntent); // 결과를 성공으로 설정하고 Intent 전달
         Log.d(TAG, "노트 저장 완료. ID: " + currentNoteId);
         finish(); // 현재 액티비티 종료
+    }
+    /**
+     * 현재 선택된 이미지를 제거하고 UI를 업데이트합니다.
+     */
+    private void removeImage() {
+        currentImageUri = null; // 현재 이미지 URI를 null로 설정
+        updateImageContainerVisibility(); // 이미지 컨테이너 가시성 업데이트
+        Toast.makeText(this, "이미지가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
     }
 }
