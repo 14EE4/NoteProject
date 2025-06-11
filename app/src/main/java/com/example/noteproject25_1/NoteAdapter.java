@@ -1,32 +1,31 @@
 package com.example.noteproject25_1;
 
-import android.net.Uri; // Uri import 추가
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView; // ImageView import 추가
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ListAdapter; // ListAdapter 사용 권장
-import androidx.recyclerview.widget.DiffUtil;    // ListAdapter 사용 시 필요
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide; // Glide import 추가
+import com.bumptech.glide.Glide;
 
-import java.util.List;
 
-// ListAdapter를 사용하는 것을 강력히 권장합니다.
-// public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> { // 이전 코드
 public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteViewHolder> { // ListAdapter 사용
     private OnItemClickListener listener;
+    private OnItemDeleteListener deleteListener;
 
-    // ListAdapter 사용 시 생성자 변경
+
     public NoteAdapter() {
         super(DIFF_CALLBACK);
     }
 
-    // DiffUtil.ItemCallback 구현 (ListAdapter에 필요)
+
     private static final DiffUtil.ItemCallback<Note> DIFF_CALLBACK = new DiffUtil.ItemCallback<Note>() {
         @Override
         public boolean areItemsTheSame(@NonNull Note oldItem, @NonNull Note newItem) {
@@ -38,8 +37,7 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteViewHolder> {
 
         @Override
         public boolean areContentsTheSame(@NonNull Note oldItem, @NonNull Note newItem) {
-            // 모든 필드를 비교하여 내용 변경 여부 확인
-            // Note 클래스에 equals()를 제대로 구현했다면 oldItem.equals(newItem) 사용 가능
+
             boolean titleSame = oldItem.getTitle() != null ? oldItem.getTitle().equals(newItem.getTitle()) : newItem.getTitle() == null;
             boolean contentSame = oldItem.getContent() != null ? oldItem.getContent().equals(newItem.getContent()) : newItem.getContent() == null;
             boolean imageUriSame = oldItem.getImageUri() != null ? oldItem.getImageUri().equals(newItem.getImageUri()) : newItem.getImageUri() == null;
@@ -51,9 +49,15 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteViewHolder> {
     public interface OnItemClickListener {
         void onItemClick(Note note);
     }
+    public interface OnItemDeleteListener { // 삭제 리스너 인터페이스
+        void onItemDelete(Note note, int position);
+    }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
+    }
+    public void setOnItemDeleteListener(OnItemDeleteListener deleteListener) { // 삭제 리스너 설정 메소드
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -65,8 +69,8 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
-        // Note note = notes.get(position); // RecyclerView.Adapter 사용 시
-        Note note = getItem(position); // ListAdapter 사용 시
+
+        Note note = getItem(position);
 
         holder.titleTextView.setText(note.getTitle());
         holder.contentTextView.setText(note.getContent());
@@ -81,8 +85,7 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteViewHolder> {
                     .into(holder.noteImageView);
         } else {
             holder.noteImageView.setVisibility(View.GONE); // 이미지가 없으면 숨김
-            // Glide.with(holder.itemView.getContext()).clear(holder.noteImageView); // 이전 이미지 메모리 해제 (선택 사항)
-            // holder.noteImageView.setImageDrawable(null); // ImageView 내용 비우기
+
         }
 
         holder.itemView.setOnClickListener(v -> {
@@ -90,20 +93,30 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteViewHolder> {
                 listener.onItemClick(note); // 클릭 시 해당 Note 객체 전달
             }
         });
+
+        // 삭제 버튼 클릭 리스너 설정
+        holder.deleteButton.setOnClickListener(v -> {
+            if (deleteListener != null) {
+                deleteListener.onItemDelete(note, holder.getAdapterPosition());
+            }
+        });
     }
 
-    // getItemCount()는 ListAdapter가 내부적으로 처리하므로 오버라이드할 필요 없음 (필요시 super.getItemCount() 또는 현재 리스트 크기 반환)
+
 
     static class NoteViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
         TextView contentTextView;
-        ImageView noteImageView; // ImageView 참조 추가
+        ImageView noteImageView;
+        ImageButton deleteButton;
 
         public NoteViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.titleTextView);
             contentTextView = itemView.findViewById(R.id.contentTextView);
-            noteImageView = itemView.findViewById(R.id.noteCardImageView); // 레이아웃의 ImageView ID와 일치
+            noteImageView = itemView.findViewById(R.id.noteCardImageView);
+            deleteButton = itemView.findViewById(R.id.deleteNoteButton);
+
         }
     }
 

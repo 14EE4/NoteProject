@@ -26,7 +26,7 @@ public class EditNoteActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     // Intent로 데이터를 주고받기 위한 키 값들
-    // 다른 액티비티(예: MainActivity)에서도 이 키들을 사용하여 데이터를 추출하거나 넣어야 합니다.
+
     public static final String EXTRA_NOTE_ID = "com.example.noteproject25_1.NOTE_ID";
     public static final String EXTRA_NOTE_TITLE = "com.example.noteproject25_1.NOTE_TITLE";
     public static final String EXTRA_NOTE_CONTENT = "com.example.noteproject25_1.NOTE_CONTENT";
@@ -48,7 +48,7 @@ public class EditNoteActivity extends AppCompatActivity {
         titleEditText = findViewById(R.id.titleEditText);
         contentEditText = findViewById(R.id.contentEditText);
         noteImageView = findViewById(R.id.noteImageView);
-        imageDisplayContainer = findViewById(R.id.imageDisplayContainer); // FrameLayout 참조
+        imageDisplayContainer = findViewById(R.id.imageDisplayContainer);
         saveButton = findViewById(R.id.saveButton);
         addImageButton = findViewById(R.id.addImageButton);
 
@@ -64,7 +64,7 @@ public class EditNoteActivity extends AppCompatActivity {
     }
 
     /**
-     * Intent에 담겨 넘어온 기존 노트 데이터를 UI에 로드합니다.
+     * Intent에 담겨 넘어온 기존 노트 데이터를 UI에 로드
      */
     private void loadNoteData() {
         Intent intent = getIntent();
@@ -85,12 +85,11 @@ public class EditNoteActivity extends AppCompatActivity {
     }
 
     /**
-     * 갤러리를 열어 이미지를 선택하도록 합니다.
+     * 갤러리를 열어 이미지 선택
      */
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        // ACTION_PICK은 특정 종류의 데이터를 선택하게 하고 그 URI를 반환합니다.
-        // MediaStore.Images.Media.EXTERNAL_CONTENT_URI는 외부 저장소의 모든 이미지를 대상으로 합니다.
+
 
         // resolveActivity는 이 Intent를 처리할 수 있는 액티비티가 있는지 확인합니다.
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -115,14 +114,12 @@ public class EditNoteActivity extends AppCompatActivity {
             // 이미지 뷰 업데이트
             updateImageContainerVisibility();
 
-            // 중요: 프로덕션 앱에서는 이 content URI를 앱 내부 저장소로 복사하고,
-            // 그 파일 경로/URI를 저장하는 것이 안정적입니다.
-            // content URI는 권한이 만료되거나 변경될 수 있습니다.
+
         }
     }
 
     /**
-     * currentImageUri 상태에 따라 이미지 컨테이너의 가시성을 업데이트하고 이미지를 로드합니다.
+     * 이미지가 있으면 이미지 컨테이너의 가시성을 업데이트하고 이미지를 로드
      */
     private void updateImageContainerVisibility() {
         if (currentImageUri != null) {
@@ -134,20 +131,18 @@ public class EditNoteActivity extends AppCompatActivity {
                     .into(noteImageView);
         } else {
             imageDisplayContainer.setVisibility(View.GONE); // 이미지가 없으면 컨테이너 숨기기
-            // 필요하다면 noteImageView를 기본 이미지로 설정하거나 비울 수 있습니다.
-            // Glide가 load(null)을 처리하거나, 명시적으로 비울 수 있습니다.
-            // noteImageView.setImageDrawable(null);
+
         }
     }
 
     /**
-     * 현재 노트의 제목, 내용, 이미지 URI를 저장(결과로 반환)하고 액티비티를 종료합니다.
+     * 현재 노트의 제목, 내용, 이미지 URI를 저장(결과로 반환)하고 액티비티를 종료
      */
     private void saveNote() {
         String title = titleEditText.getText().toString().trim();
         String content = contentEditText.getText().toString().trim();
 
-        // 제목, 내용, 이미지가 모두 비어있으면 저장하지 않음 (선택적)
+        // 제목, 내용, 이미지가 모두 비어있으면 저장하지 않음
         if (TextUtils.isEmpty(title) && TextUtils.isEmpty(content) && currentImageUri == null) {
             Toast.makeText(this, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
             return;
@@ -155,8 +150,8 @@ public class EditNoteActivity extends AppCompatActivity {
 
         Intent resultIntent = new Intent();
 
-        // 새 노트인 경우 (currentNoteId가 null), 새로운 ID를 생성합니다.
-        // 실제 앱에서는 UUID.randomUUID().toString() 또는 데이터베이스의 자동 증가 ID를 사용하는 것이 좋습니다.
+        // 새 노트인 경우 (currentNoteId가 null), 새로운 ID를 생성
+
         if (currentNoteId == null) {
             currentNoteId = String.valueOf(System.currentTimeMillis()); // 임시 ID 생성 방식
         }
@@ -167,7 +162,7 @@ public class EditNoteActivity extends AppCompatActivity {
         if (currentImageUri != null) {
             resultIntent.putExtra(EXTRA_NOTE_IMAGE_URI, currentImageUri.toString());
         }
-        // 이미지가 없는 경우 EXTRA_NOTE_IMAGE_URI 키 자체가 포함되지 않거나 null로 전달될 수 있습니다.
+        // 이미지가 없는 경우 EXTRA_NOTE_IMAGE_URI 키 자체가 포함되지 않거나 null로 전달
 
         setResult(RESULT_OK, resultIntent); // 결과를 성공으로 설정하고 Intent 전달
         Log.d(TAG, "노트 저장 완료. ID: " + currentNoteId);

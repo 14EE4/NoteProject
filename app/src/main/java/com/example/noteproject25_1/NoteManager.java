@@ -27,7 +27,7 @@ public class NoteManager {
 
     public static synchronized void deleteNote(Context context, Note noteToDelete) {
         List<Note> notes = getNotes(context);
-        // Java 8 이상
+
         boolean removed = notes.removeIf(note -> note.getId().equals(noteToDelete.getId()));
         if (removed) {
             saveNotes(context, notes);
@@ -35,20 +35,6 @@ public class NoteManager {
 
     }
 
-    public static synchronized void updateNote(Context context, Note updatedNote) {
-        List<Note> notes = getNotes(context);
-        boolean updated = false;
-        for (int i = 0; i < notes.size(); i++) {
-            if (notes.get(i).getId().equals(updatedNote.getId())) {
-                notes.set(i, updatedNote); // 노트를 업데이트
-                updated = true;
-                break;
-            }
-        }
-        if (updated) {
-            saveNotes(context, notes); // 수정된 노트를 저장
-        }
-    }
 
     public static synchronized void saveNote(Context context, Note noteToSave) {
         List<Note> notes = getNotes(context);
