@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -19,7 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
-
+/**
+ * 노트를 편집하는 액티비티
+ * 노트의 제목, 내용, 이미지를 수정할 수 있음
+ * 이미지를 추가하거나 삭제할 수 있음
+ * 노트를 저장하고 수정할 수 있음
+ *
+ */
 public class EditNoteActivity extends AppCompatActivity {
 
     private static final String TAG = "EditNoteActivity";
@@ -27,16 +32,14 @@ public class EditNoteActivity extends AppCompatActivity {
 
     // Intent로 데이터를 주고받기 위한 키 값들
 
-    public static final String EXTRA_NOTE_ID = "com.example.noteproject25_1.NOTE_ID";
-    public static final String EXTRA_NOTE_TITLE = "com.example.noteproject25_1.NOTE_TITLE";
-    public static final String EXTRA_NOTE_CONTENT = "com.example.noteproject25_1.NOTE_CONTENT";
-    public static final String EXTRA_NOTE_IMAGE_URI = "com.example.noteproject25_1.NOTE_IMAGE_URI";
+    public static final String EXTRA_NOTE_ID = "NOTE_ID";
+    public static final String EXTRA_NOTE_TITLE = "NOTE_TITLE";
+    public static final String EXTRA_NOTE_CONTENT = "NOTE_CONTENT";
+    public static final String EXTRA_NOTE_IMAGE_URI = "NOTE_IMAGE_URI";
 
     EditText titleEditText, contentEditText;
     ImageView noteImageView;
     FrameLayout imageDisplayContainer; // 이미지를 보여주는 FrameLayout
-
-
 
     ImageButton saveButton, addImageButton, removeCurrentImageButton;
 

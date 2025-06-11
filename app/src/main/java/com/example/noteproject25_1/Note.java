@@ -1,6 +1,10 @@
 package com.example.noteproject25_1;
 
-
+/**
+ * 노트 클래스
+ * 노트의 ID, 제목, 내용, 이미지 URI를 저장
+ *
+ */
 public class Note {
     private String id;
     private String title;

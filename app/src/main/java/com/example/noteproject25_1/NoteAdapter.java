@@ -15,7 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-
+/**
+ * 노트 어댑터
+ * 노트 목록을 표시하는 데 사용
+ * 노트의 제목, 내용, 이미지를 표시
+ * 노트를 클릭하면 편집할 수 있음
+ * 노트를 삭제할 수 있음
+ *
+ */
 public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteViewHolder> { // ListAdapter 사용
     private OnItemClickListener listener;
     private OnItemDeleteListener deleteListener;

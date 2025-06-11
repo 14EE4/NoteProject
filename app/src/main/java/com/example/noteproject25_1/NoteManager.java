@@ -8,10 +8,14 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Iterator; // Iterator를 사용한다면 import
 import java.util.List;
-import java.util.UUID; // UUID 사용 시 import
+import java.util.UUID;
 
+/**
+ * 노트 관리 클래스
+ * 노트를 저장하고 로드하는 데 사용
+ * 기본값으로 테스트 노트 3개 생성
+ */
 public class NoteManager {
     private static final String PREFS_NAME = "MyPrefs";
     private static final String NOTES_KEY = "notes";
@@ -68,17 +72,6 @@ public class NoteManager {
             // Log.e("NoteManager", "Error parsing notes from JSON", e);
             return new ArrayList<>(); // 오류 발생 시 빈 리스트 반환
         }
-    }
-
-    public static Note getNoteById(Context context, String noteId) {
-        if (noteId == null) return null;
-        List<Note> notes = getNotes(context);
-        for (Note note : notes) {
-            if (noteId.equals(note.getId())) { // noteId.equals()가 더 안전
-                return note;
-            }
-        }
-        return null;
     }
 
     private static synchronized void saveNotes(Context context, List<Note> notes) {
