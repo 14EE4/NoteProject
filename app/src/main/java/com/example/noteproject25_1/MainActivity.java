@@ -2,11 +2,13 @@ package com.example.noteproject25_1;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log; // <<< 이 import 문으로 변경 또는 추가
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+// import androidx.media3.common.util.UnstableApi; // android.util.Log를 사용하면 이 어노테이션은 필요 없을 수 있습니다 (Media3의 다른 UnstableApi를 사용하지 않는다면)
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,11 +16,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
+// @UnstableApi // 만약 androidx.media3.common.util.Log 외에 다른 UnstableApi를 사용하지 않는다면 이 어노테이션 제거 가능
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;//노트 목록을 보기 위한 리사이클러뷰
+    private RecyclerView recyclerView;
     private NoteAdapter adapter;
-    private FloatingActionButton addButton;//새 노트
+    private FloatingActionButton addButton;
     private static final String NOTE_ID = "note_id";
     private static final String NOTE_TITLE = "note_title";
     private static final String NOTE_CONTENT = "note_content";
@@ -35,19 +38,18 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Note> notes = NoteManager.getNotes(this);//노트 리스트
-        adapter = new NoteAdapter(notes);//리사이클러뷰 사용을 위한 어댑터
+        List<Note> notes = NoteManager.getNotes(this);
+        // adapter = new NoteAdapter(notes); // 이전 어댑터 생성 방식
+        adapter = new NoteAdapter(); // ListAdapter 사용 시
         recyclerView.setAdapter(adapter);
+        adapter.submitList(notes);
 
-        // EditNoteActivity 결과 처리를 위한 Launcher
         editNoteLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        // EditNoteActivity에서 노트가 저장/수정되었을 때의 처리
-                        androidx.media3.common.util.Log.d("MainActivity", "EditNoteLauncher: 노트 수정/저장 결과 받음");
+                        Log.d("MainActivity", "EditNoteLauncher: 노트 수정/저장 결과 받음"); // 변경됨
 
-                        // NoteManager를 통해 실제 저장 또는 업데이트 수행
                         Intent data = result.getData();
                         String noteId = data.getStringExtra(EditNoteActivity.EXTRA_NOTE_ID);
                         String title = data.getStringExtra(EditNoteActivity.EXTRA_NOTE_TITLE);
@@ -56,57 +58,38 @@ public class MainActivity extends AppCompatActivity {
 
                         if (noteId != null) {
                             Note updatedNote = new Note(noteId, title, content, imageUri);
-                            NoteManager.saveNote(this, updatedNote); // 또는 NoteManager.updateNote(this, updatedNote);
-                            androidx.media3.common.util.Log.d("MainActivity", "EditNoteLauncher: Note updated/saved with ID: " + noteId);
+                            NoteManager.saveNote(this, updatedNote);
+                            Log.d("MainActivity", "EditNoteLauncher: Note updated/saved with ID: " + noteId); // 변경됨
                         }
-                        refreshNoteList(); // 목록 새로고침
+                        refreshNoteList();
                     } else {
-                        androidx.media3.common.util.Log.d("MainActivity", "EditNoteLauncher: 결과가 OK가 아니거나 데이터가 null임. ResultCode: " + result.getResultCode());
+                        Log.d("MainActivity", "EditNoteLauncher: 결과가 OK가 아니거나 데이터가 null임. ResultCode: " + result.getResultCode()); // 변경됨
                     }
                 });
 
-        // AddNoteActivity 결과 처리를 위한 Launcher
         addNoteLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        androidx.media3.common.util.Log.d("MainActivity", "AddNoteLauncher: 새 노트 저장 결과 받음");
+                        Log.d("MainActivity", "AddNoteLauncher: 새 노트 저장 결과 받음"); // 변경됨
                         Intent data = result.getData();
                         String noteId = data.getStringExtra(EditNoteActivity.EXTRA_NOTE_ID);
                         String title = data.getStringExtra(EditNoteActivity.EXTRA_NOTE_TITLE);
                         String content = data.getStringExtra(EditNoteActivity.EXTRA_NOTE_CONTENT);
                         String imageUri = data.getStringExtra(EditNoteActivity.EXTRA_NOTE_IMAGE_URI);
 
-                        if (noteId != null) { // EditNoteActivity에서 ID를 항상 생성하므로 null이 아니어야 함
+                        if (noteId != null) {
                             Note newNote = new Note(noteId, title, content, imageUri);
                             NoteManager.saveNote(this, newNote);
-                            androidx.media3.common.util.Log.d("MainActivity", "AddNoteLauncher: New note saved with ID: " + noteId);
+                            Log.d("MainActivity", "AddNoteLauncher: New note saved with ID: " + noteId); // 변경됨
                         }
                         refreshNoteList();
                     } else {
-                        androidx.media3.common.util.Log.d("MainActivity", "AddNoteLauncher: 결과가 OK가 아니거나 데이터가 null임. ResultCode: " + result.getResultCode());
+                        Log.d("MainActivity", "AddNoteLauncher: 결과가 OK가 아니거나 데이터가 null임. ResultCode: " + result.getResultCode()); // 변경됨
                     }
                 });
 
 
-        adapter.setOnItemClickListener(new NoteAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Note note) {
-                Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
-                intent.putExtra(NOTE_ID, note.getId());
-                intent.putExtra(NOTE_TITLE, note.getTitle());
-                intent.putExtra(NOTE_CONTENT, note.getContent());
-                startActivity(intent);//액티비티 이동
-            }
-        });
-
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
-                startActivity(intent);
-            }
-        });
         adapter.setOnItemClickListener(new NoteAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Note note) {
@@ -117,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 if (note.getImageUri() != null && !note.getImageUri().isEmpty()) {
                     intent.putExtra(EditNoteActivity.EXTRA_NOTE_IMAGE_URI, note.getImageUri());
                 }
-                editNoteLauncher.launch(intent); // Launcher로 실행
+                editNoteLauncher.launch(intent);
             }
         });
 
@@ -125,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
-                addNoteLauncher.launch(intent); // Launcher로 실행
+                addNoteLauncher.launch(intent);
             }
         });
 
@@ -133,21 +116,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {//노트 업데이트시
+    protected void onResume() {
         super.onResume();
-        List<Note> notes = NoteManager.getNotes(this);
-        adapter.setNotes(notes);
-        adapter.notifyDataSetChanged();
+        // List<Note> notes = NoteManager.getNotes(this); // refreshNoteList에서 호출되므로 중복될 수 있음
+        // adapter.submitList(notes);
+        refreshNoteList(); // onResume 시 목록을 다시 로드하여 변경사항 반영
     }
+
     private void refreshNoteList() {
         List<Note> notes = NoteManager.getNotes(this);
-        // ListAdapter를 사용한다면 adapter.submitList(notes);
-        // 현재 Adapter를 사용한다면 adapter.setNotes(notes);
-        // setNotes 내부 또는 여기서 notifyDataSetChanged() 호출
-        if (adapter != null) { // 어댑터가 null이 아닌지 확인
-            adapter.setNotes(notes); // 이 메소드 내부에서 notifyDataSetChanged()가 호출될 것으로 예상
+        if (adapter != null) {
+            adapter.submitList(notes);
         }
-        androidx.media3.common.util.Log.d("MainActivity", "Note list refreshed. Item count: " + (notes != null ? notes.size() : 0));
-
+        Log.d("MainActivity", "Note list refreshed. Item count: " + (notes != null ? notes.size() : 0)); // 변경됨
     }
 }
