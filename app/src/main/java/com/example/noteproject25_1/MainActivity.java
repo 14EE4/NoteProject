@@ -7,7 +7,6 @@ import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ import java.util.List;
  * 메인 액티비티
  * 노트를 관리하는 메인 화면
  * 노트 목록을 보여주고, 새로운 노트를 추가할 수 있음
- * 노트를 수정하거나 삭제할 수 있음
+ * 노트를 삭제할 수 있음
  * 노트의 이미지를 보여줌
  * 노트를 삭제하면 복구할 수 있음
  *
@@ -33,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private NoteAdapter adapter;
     private FloatingActionButton addButton;
 
-    private ActivityResultLauncher<Intent> editNoteLauncher;
-    private ActivityResultLauncher<Intent> addNoteLauncher;
+    private ActivityResultLauncher<Intent> editNoteLauncher;//노트를 수정할 때 사용
+    private ActivityResultLauncher<Intent> addNoteLauncher;//새로운 노트를 추가할 때 사용
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +48,17 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Note> notes = NoteManager.getNotes(this);
+        List<Note> notes = NoteManager.getNotes(this);//노트를 불러옴
 
         adapter = new NoteAdapter();
         recyclerView.setAdapter(adapter);
         adapter.submitList(notes);
 
+
         editNoteLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
+
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Log.d("MainActivity", "EditNoteLauncher: 노트 수정/저장 결과 받음");
 
@@ -115,11 +119,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemDelete(Note note, int position) {
                 // 확인 다이얼로그 표시
-                new AlertDialog.Builder(MainActivity.this, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert)
+                new MaterialAlertDialogBuilder(MainActivity.this, R.style.MyDarkMaterialDialogTheme)
                         .setTitle("노트 삭제")
                         .setMessage("'" + note.getTitle() + "' 노트를 삭제하시겠습니까?")
                         .setPositiveButton("삭제", (dialog, which) -> {
-                            deleteNoteWithUndo(note, position); // 위에서 구현한 메소드 재활용 가능
+                            deleteNoteWithUndo(note, position);
                         })
                         .setNegativeButton("취소", null)
                         .show();

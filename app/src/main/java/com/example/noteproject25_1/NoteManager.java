@@ -59,8 +59,8 @@ public class NoteManager {
     public static List<Note> getNotes(Context context) {
         SharedPreferences prefs = getSharedPreferences(context);
         String json = prefs.getString(NOTES_KEY, null);
-        if (json == null) {
-            List<Note> initialNotes = createInitialNotes(); // Context 전달 제거 (또는 필요시 유지)
+        if (json == null) {// 저장된 노트가 없을 경우 기본값 설정
+            List<Note> initialNotes = createInitialNotes();
             saveNotes(context, initialNotes);
             return initialNotes;
         }

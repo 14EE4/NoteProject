@@ -29,11 +29,13 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteViewHolder> {
 
 
     public NoteAdapter() {
-        super(DIFF_CALLBACK);
+        super(DIFF_CALLBACK);// DiffUtil 사용
+
     }
 
 
     private static final DiffUtil.ItemCallback<Note> DIFF_CALLBACK = new DiffUtil.ItemCallback<Note>() {
+
         @Override
         public boolean areItemsTheSame(@NonNull Note oldItem, @NonNull Note newItem) {
             if (oldItem.getId() == null || newItem.getId() == null) { // ID가 null일 수 있는 경우 대비

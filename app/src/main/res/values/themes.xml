@@ -8,4 +8,29 @@
     </style>
 
     <style name="Theme.Noteproject25_1" parent="Base.Theme.Noteproject25_1" />
+    <style name="MyDarkMaterialDialogTheme"
+        parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <!-- 배경색 -->
+        <item name="colorSurface">@color/dialog_dark_background</item>
+        <item name="android:background">@color/dialog_dark_background
+        </item> <!-- API 레벨에 따라 필요할 수 있음 -->
+
+        <!-- 제목 및 메시지 텍스트 색상 -->
+        <item name="colorOnSurface">@color/dialog_dark_text_primary</item>
+        <item name="android:textColorPrimary">@color/dialog_dark_text_primary</item>
+        <item name="android:textColorSecondary">@color/dialog_dark_text_secondary</item>
+
+        <!-- 버튼 텍스트 색상 (Material Components에서는 colorPrimary, colorSecondary 등을 활용하지만 직접 지정도 가능) -->
+        <item name="buttonBarPositiveButtonStyle">@style/MyDarkDialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/MyDarkDialogButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/MyDarkDialogButton</item>
+
+        <!-- 버튼 색상을 테마의 primary 색상으로 하고 싶다면 (Material 권장) -->
+        <!-- <item name="colorPrimary">@color/dialog_dark_button_text</item> -->
+    </style>
+
+    <style name="MyDarkDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/dialog_dark_button_text</item>
+        <item name="materialThemeOverlay">@null</item> <!-- 부모 테마의 버튼 색상 오버레이 방지 -->
+    </style>
 </resources>
