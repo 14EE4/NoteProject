@@ -56,7 +56,7 @@ public class NoteManager {
         saveNotes(context, notes);
     }
 
-    public static List<Note> getNotes(Context context) {
+    public static List<Note> getNotes(Context context) {// 저장된 노트를 불러오는 함수
         SharedPreferences prefs = getSharedPreferences(context);
         String json = prefs.getString(NOTES_KEY, null);
         if (json == null) {// 저장된 노트가 없을 경우 기본값 설정
@@ -74,7 +74,16 @@ public class NoteManager {
         }
     }
 
-    private static synchronized void saveNotes(Context context, List<Note> notes) {
+    private static synchronized void saveNotes(Context context, List<Note> notes) {// 노트를 저장하는 함수
+        /**
+         * 노트를 저장하는 함수
+         * 노트를 JSON 형식으로 변환하여 저장
+         * Context가 null인 경우 예외 발생
+         * JSON 파싱 오류 등 예외 처리
+         * SharedPreferences를 사용하여 노트를 저장
+         * Context가 null인 경우 예외 발생
+         *
+         */
         SharedPreferences prefs = getSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         String json = new Gson().toJson(notes);

@@ -71,13 +71,20 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteViewHolder> {
 
     @NonNull
     @Override
-    public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_main_card, parent, false);
+    public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {// ViewHolder 생성
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_main_card, parent, false);// card_item.xml 레이아웃 사용
         return new NoteViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {// ViewHolder 데이터 바인딩
+        /**
+         * 노트의 제목, 내용, 이미지를 UI에 설정
+         * 노트를 클릭하면 편집할 수 있음
+         * 노트를 삭제할 수 있음
+         * 노트의 이미지를 보여줌
+         *
+         */
 
         Note note = getItem(position);
 
@@ -113,7 +120,10 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteViewHolder> {
 
 
 
-    static class NoteViewHolder extends RecyclerView.ViewHolder {
+    static class NoteViewHolder extends RecyclerView.ViewHolder {// ViewHolder 클래스
+        /**
+         * 노트의 제목, 내용, 이미지를 표시
+         */
         TextView titleTextView;
         TextView contentTextView;
         ImageView noteImageView;
